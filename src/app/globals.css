@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root {
+@theme {
   --color-void: #020204;
   --color-ink: #06070c;
   --color-panel: #0a0c14;
@@ -11,23 +11,13 @@
   --color-violet: #8b8ff8;
   --color-line: rgba(246, 247, 251, 0.09);
   --color-line-strong: rgba(246, 247, 251, 0.16);
-
-  --font-display: var(--font-space-grotesk);
-  --font-mono: var(--font-jetbrains);
 }
 
+/* next/font exposes its generated font variables on the <html> element;
+   alias them into the theme's font tokens here. */
 @theme inline {
-  --color-void: var(--color-void);
-  --color-ink: var(--color-ink);
-  --color-panel: var(--color-panel);
-  --color-white: var(--color-white);
-  --color-fog: var(--color-fog);
-  --color-fog-dim: var(--color-fog-dim);
-  --color-electric: var(--color-electric);
-  --color-violet: var(--color-violet);
-  --color-line: var(--color-line);
-  --font-display: var(--font-display);
-  --font-mono: var(--font-mono);
+  --font-display: var(--font-space-grotesk);
+  --font-mono: var(--font-jetbrains);
 }
 
 * {

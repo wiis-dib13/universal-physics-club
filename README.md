@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# universal-physics-club
 
-## Getting Started
+Site immersif pour le club de physique universitaire **UNIVERSAL__PHYSICS** — Next.js, TypeScript, Tailwind CSS v4 et Framer Motion, avec des visualisations scientifiques en canvas (champs de particules, formation de texte par particules) et un formulaire d'inscription intégré.
 
-First, run the development server:
+## Démarrer
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvrir [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Next.js 16** (App Router, Turbopack)
+- **Tailwind CSS v4** (thème défini dans `src/app/globals.css`)
+- **Framer Motion** pour les animations et transitions au scroll
+- Canvas 2D fait main pour les champs de particules (`src/components/canvas/`) — pas de dépendance WebGL/Three.js
+- Assets scientifiques dans `public/assets/`
 
-## Learn More
+## Structure
 
-To learn more about Next.js, take a look at the following resources:
+- `src/app/page.tsx` — assemble toutes les sections de la page unique
+- `src/components/sections/` — Hero, Le Club, Expériences interactives, Pourquoi nous rejoindre, Communauté, Rejoindre
+- `src/components/RegisterForm.tsx` + `SuccessScreen.tsx` — formulaire d'inscription et écran de succès
+- `src/components/canvas/ParticleField.tsx` — champ de particules ambiant réactif à la souris
+- `src/components/canvas/TextParticles.tsx` — particules qui convergent pour former le logo au scroll
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## À savoir
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Le formulaire d'inscription valide les champs et affiche l'écran de bienvenue côté client, mais **n'envoie les données nulle part pour l'instant** (pas de backend/API configuré). Pour collecter les inscriptions, brancher `RegisterForm.tsx` sur une route API, un service comme Supabase/Airtable, ou un email transactionnel.
 
-## Deploy on Vercel
+## Déploiement
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Le projet est prêt pour un déploiement sur [Vercel](https://vercel.com/new) ou toute plateforme supportant Next.js.
