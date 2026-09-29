@@ -10,11 +10,14 @@ type FormState = {
   birthDate: string;
   phone: string;
   email: string;
+  group: string;
   motivation: string;
   goals: string;
 };
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
+
+const GROUPS = ["Organisation", "Marketing", "Relation interne"];
 
 const REQUIRED_MSG = "Ce champ est requis.";
 const TARGET_EMAIL = "chaimaadali74@gmail.com";
@@ -77,6 +80,7 @@ export default function RegisterForm() {
     birthDate: "",
     phone: "",
     email: "",
+    group: "",
     motivation: "",
     goals: "",
   });
@@ -103,6 +107,7 @@ export default function RegisterForm() {
     if (!values.email.trim()) e.email = REQUIRED_MSG;
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim()))
       e.email = "E-mail invalide.";
+    if (!values.group) e.group = REQUIRED_MSG;
     if (!values.motivation.trim()) e.motivation = REQUIRED_MSG;
     if (!values.goals.trim()) e.goals = REQUIRED_MSG;
     return e;
@@ -132,7 +137,8 @@ export default function RegisterForm() {
           "Date de naissance": values.birthDate,
           "Numéro de téléphone": values.phone,
           "E-mail": values.email,
-          "Pourquoi rejoindre le club": values.motivation,
+          "Groupe souhaité": values.group,
+          "Pourquoi rejoindre ce groupe": values.motivation,
           "Objectifs et nouveautés souhaitées": values.goals,
         }),
       });
@@ -249,7 +255,30 @@ export default function RegisterForm() {
           </FieldShell>
 
           <FieldShell
-            label="Pourquoi souhaitez-vous rejoindre le club ? *"
+            label="Quel groupe souhaitez-vous rejoindre ? *"
+            error={errors.group}
+          >
+            <div className="flex flex-wrap gap-3">
+              {GROUPS.map((g) => (
+                <button
+                  type="button"
+                  key={g}
+                  data-cursor="link"
+                  onClick={() => set("group", g)}
+                  className={`rounded-full border px-4 py-2 text-sm transition-colors duration-300 ${
+                    values.group === g
+                      ? "border-[var(--color-electric)] bg-[var(--color-electric)]/10 text-white"
+                      : "border-line text-white/70 hover:border-line-strong hover:text-white"
+                  }`}
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
+          </FieldShell>
+
+          <FieldShell
+            label="Pourquoi souhaitez-vous rejoindre ce groupe ? *"
             error={errors.motivation}
           >
             <div className="relative">
