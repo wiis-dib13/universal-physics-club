@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useMemo, useState, type FormEvent, type ReactNode } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import SuccessScreen from "./SuccessScreen";
@@ -112,6 +112,24 @@ export default function RegisterForm() {
     if (!values.goals.trim()) e.goals = REQUIRED_MSG;
     return e;
   };
+
+  const mailtoHref = useMemo(() => {
+    const subject = "Candidature — Universal Physics Club";
+    const body = [
+      `Nom et prénom : ${values.fullName}`,
+      `Date de naissance : ${values.birthDate}`,
+      `Numéro de téléphone : ${values.phone}`,
+      `E-mail : ${values.email}`,
+      `Groupe souhaité : ${values.group}`,
+      "",
+      `Pourquoi rejoindre ce groupe :`,
+      values.motivation,
+      "",
+      `Objectifs et nouveautés souhaitées :`,
+      values.goals,
+    ].join("\n");
+    return `mailto:${TARGET_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }, [values]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -309,14 +327,23 @@ export default function RegisterForm() {
 
           <AnimatePresence>
             {submitFailed && (
-              <motion.p
+              <motion.div
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="text-center text-xs text-[var(--color-violet)]"
+                className="flex flex-col items-center gap-2 text-center"
               >
-                Une erreur est survenue. Merci de réessayer.
-              </motion.p>
+                <p className="text-xs text-[var(--color-violet)]">
+                  Une erreur est survenue. Merci de réessayer.
+                </p>
+                <a
+                  href={mailtoHref}
+                  data-cursor="link"
+                  className="text-xs text-white/60 underline underline-offset-4 transition-colors hover:text-[var(--color-electric)]"
+                >
+                  Ou écris-nous directement par e-mail
+                </a>
+              </motion.div>
             )}
           </AnimatePresence>
 
