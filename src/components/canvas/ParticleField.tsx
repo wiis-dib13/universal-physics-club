@@ -94,10 +94,24 @@ export default function ParticleField({
     const onLeave = () => {
       mouse.active = false;
     };
+    const onTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      const rect = container.getBoundingClientRect();
+      mouse.x = touch.clientX - rect.left;
+      mouse.y = touch.clientY - rect.top;
+      mouse.active = true;
+    };
+    const onTouchEnd = () => {
+      mouse.active = false;
+    };
 
     if (interactive) {
       window.addEventListener("mousemove", onMove, { passive: true });
       container.addEventListener("mouseleave", onLeave);
+      window.addEventListener("touchmove", onTouchMove, { passive: true });
+      window.addEventListener("touchend", onTouchEnd, { passive: true });
+      window.addEventListener("touchcancel", onTouchEnd, { passive: true });
     }
 
     let raf = 0;
@@ -180,6 +194,9 @@ export default function ParticleField({
       if (interactive) {
         window.removeEventListener("mousemove", onMove);
         container.removeEventListener("mouseleave", onLeave);
+        window.removeEventListener("touchmove", onTouchMove);
+        window.removeEventListener("touchend", onTouchEnd);
+        window.removeEventListener("touchcancel", onTouchEnd);
       }
     };
   }, [density, interactive, lines, speed, reducedMotion]);

@@ -9,18 +9,26 @@ export function useParallaxMouse(strength = 1) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const isFine = window.matchMedia("(hover: hover) and (pointer: fine)");
-    if (!isFine.matches) return;
 
-    const onMove = (e: MouseEvent) => {
+    const apply = (clientX: number, clientY: number) => {
       const rect = el.getBoundingClientRect();
-      const px = (e.clientX - rect.left) / rect.width - 0.5;
-      const py = (e.clientY - rect.top) / rect.height - 0.5;
+      const px = (clientX - rect.left) / rect.width - 0.5;
+      const py = (clientY - rect.top) / rect.height - 0.5;
       setOffset({ x: px * strength, y: py * strength });
     };
 
+    const onMove = (e: MouseEvent) => apply(e.clientX, e.clientY);
+    const onTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (touch) apply(touch.clientX, touch.clientY);
+    };
+
     window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("touchmove", onTouchMove);
+    };
   }, [strength]);
 
   return { ref, offset };
