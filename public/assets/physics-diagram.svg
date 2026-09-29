@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="100%" height="100%">
+  <rect width="1000" height="600" fill="#040608"/>
+  <defs>
+    <filter id="fieldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="cyanLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.1"/>
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#818cf8" stop-opacity="0.2"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+    </marker>
+    <marker id="arrow-white" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#ffffff" />
+    </marker>
+  </defs>
+
+  <!-- Coordinate Grid Background -->
+  <g stroke="#ffffff" stroke-opacity="0.05" stroke-width="0.75">
+    <line x1="100" y1="0" x2="100" y2="600"/>
+    <line x1="200" y1="0" x2="200" y2="600"/>
+    <line x1="300" y1="0" x2="300" y2="600"/>
+    <line x1="400" y1="0" x2="400" y2="600"/>
+    <line x1="500" y1="0" x2="500" y2="600"/>
+    <line x1="600" y1="0" x2="600" y2="600"/>
+    <line x1="700" y1="0" x2="700" y2="600"/>
+    <line x1="800" y1="0" x2="800" y2="600"/>
+    <line x1="900" y1="0" x2="900" y2="600"/>
+    <line x1="0" y1="100" x2="1000" y2="100"/>
+    <line x1="0" y1="200" x2="1000" y2="200"/>
+    <line x1="0" y1="300" x2="1000" y2="300"/>
+    <line x1="0" y1="400" x2="1000" y2="400"/>
+    <line x1="0" y1="500" x2="1000" y2="500"/>
+  </g>
+
+  <!-- Left: Vector Decomposition & State Space -->
+  <g transform="translate(180, 320)">
+    <!-- Origin axes -->
+    <line x1="-120" y1="0" x2="140" y2="0" stroke="#ffffff" stroke-opacity="0.4" stroke-width="1.2" marker-end="url(#arrow-white)"/>
+    <line x1="0" y1="120" x2="0" y2="-140" stroke="#ffffff" stroke-opacity="0.4" stroke-width="1.2" marker-end="url(#arrow-white)"/>
+    <text x="145" y="4" fill="#ffffff" fill-opacity="0.6" font-family="monospace" font-size="12">x (Re)</text>
+    <text x="-5" y="-150" fill="#ffffff" fill-opacity="0.6" font-family="monospace" font-size="12">p (Im)</text>
+
+    <!-- State Vector |Ψ⟩ -->
+    <line x1="0" y1="0" x2="90" y2="-95" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrow)" filter="url(#fieldGlow)"/>
+    <!-- Projections -->
+    <line x1="90" y1="0" x2="90" y2="-95" stroke="#818cf8" stroke-dasharray="3 3" stroke-width="1" stroke-opacity="0.8"/>
+    <line x1="0" y1="-95" x2="90" y2="-95" stroke="#818cf8" stroke-dasharray="3 3" stroke-width="1" stroke-opacity="0.8"/>
+    <!-- Angle Arc -->
+    <path d="M 35 0 A 35 35 0 0 0 25 -25" fill="none" stroke="#38bdf8" stroke-width="1.2"/>
+    <text x="38" y="-12" fill="#38bdf8" font-family="serif" font-style="italic" font-size="14">θ</text>
+    <text x="100" y="-105" fill="#ffffff" font-family="monospace" font-size="13">|Ψ(t)⟩</text>
+  </g>
+
+  <!-- Center: Curvature / Metric Tensor Coordinate Lines -->
+  <g stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1.2" fill="none">
+    <path d="M 400 120 C 480 180, 520 180, 600 120" />
+    <path d="M 380 200 C 470 290, 530 290, 620 200" stroke-opacity="0.6"/>
+    <path d="M 370 280 C 460 380, 540 380, 630 280" stroke-opacity="0.8" stroke="#ffffff"/>
+    <path d="M 380 360 C 470 450, 530 450, 620 360" stroke-opacity="0.6"/>
+    <path d="M 400 440 C 480 480, 520 480, 600 440" />
+
+    <!-- Transverse geodesics -->
+    <path d="M 420 120 C 420 280, 440 360, 430 460" stroke-dasharray="2 4"/>
+    <path d="M 500 100 C 500 240, 500 380, 500 480" stroke="#818cf8" stroke-width="1.5" stroke-opacity="0.7"/>
+    <path d="M 580 120 C 580 280, 560 360, 570 460" stroke-dasharray="2 4"/>
+  </g>
+
+  <!-- Right: Waveform Packet & Harmonic Interference -->
+  <g transform="translate(680, 300)">
+    <!-- Envelope curves -->
+    <path d="M 0 -80 Q 75 -95, 150 0 T 300 -80" fill="none" stroke="#ffffff" stroke-opacity="0.2" stroke-dasharray="3 3"/>
+    <path d="M 0 80 Q 75 95, 150 0 T 300 80" fill="none" stroke="#ffffff" stroke-opacity="0.2" stroke-dasharray="3 3"/>
+    <!-- Modulated high freq wave packet -->
+    <path d="M 0 0 C 20 -15, 30 15, 50 0 C 70 -45, 80 45, 100 0 C 115 -85, 135 85, 150 0 C 165 -85, 185 85, 200 0 C 220 -45, 230 45, 250 0 C 270 -15, 280 15, 300 0" 
+          fill="none" stroke="url(#cyanLine)" stroke-width="2.5" filter="url(#fieldGlow)"/>
+    <circle cx="150" cy="0" r="4" fill="#ffffff" filter="url(#fieldGlow)"/>
+    <text x="140" y="-30" fill="#38bdf8" font-family="monospace" font-size="12">λ = h/p</text>
+  </g>
+
+  <!-- Scientific Legend & Notation Markers -->
+  <g fill="#ffffff" fill-opacity="0.5" font-family="monospace" font-size="10">
+    <text x="50" y="560">SYS_REF: FIG. 14 // METRIC TENSOR &amp; EIGENSTATE DECOMPOSITION</text>
+    <text x="750" y="560">UNIV__PHYSICS RESEARCH ARCHIVE</text>
+  </g>
+</svg>
