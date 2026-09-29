@@ -17,7 +17,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "UNIVERSAL__PHYSICS",
-  description: "Comprendre l'univers, une question à la fois.",
+  description:
+    "Club de physique de l'Université Abou Bekr Belkaïd de Tlemcen. Comprendre l'univers, une question à la fois.",
 };
 
 export const viewport: Viewport = {

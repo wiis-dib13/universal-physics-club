@@ -52,7 +52,7 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="mono-label mb-6 text-[10px] text-[var(--color-electric)] sm:text-xs"
         >
-          Club de Physique
+          Club de Physique — Université de Tlemcen
         </motion.span>
 
         <motion.h1

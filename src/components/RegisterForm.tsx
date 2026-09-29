@@ -10,16 +10,14 @@ type FormState = {
   birthDate: string;
   phone: string;
   email: string;
-  group: string;
   motivation: string;
   goals: string;
 };
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
 
-const GROUPS = ["Organisation", "Projet", "Marketing", "Relation interne"];
-
 const REQUIRED_MSG = "Ce champ est requis.";
+const TARGET_EMAIL = "chaimaadali74@gmail.com";
 
 function FocusGlow({ active }: { active: number }) {
   return (
@@ -50,7 +48,7 @@ function FieldShell({
 }) {
   return (
     <div className="flex flex-col gap-3">
-      <label className="mono-label text-[10px] text-fog sm:text-[11px]">
+      <label className="text-sm font-medium leading-snug text-white sm:text-base">
         {label}
       </label>
       {children}
@@ -79,7 +77,6 @@ export default function RegisterForm() {
     birthDate: "",
     phone: "",
     email: "",
-    group: "",
     motivation: "",
     goals: "",
   });
@@ -87,6 +84,7 @@ export default function RegisterForm() {
   const [focusCounter, setFocusCounter] = useState<Record<string, number>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitFailed, setSubmitFailed] = useState(false);
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setValues((v) => ({ ...v, [key]: value }));
@@ -105,23 +103,46 @@ export default function RegisterForm() {
     if (!values.email.trim()) e.email = REQUIRED_MSG;
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim()))
       e.email = "E-mail invalide.";
-    if (!values.group) e.group = REQUIRED_MSG;
     if (!values.motivation.trim()) e.motivation = REQUIRED_MSG;
     if (!values.goals.trim()) e.goals = REQUIRED_MSG;
     return e;
   };
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     const e = validate();
     setErrors(e);
     if (Object.keys(e).length > 0) return;
 
     setSubmitting(true);
-    window.setTimeout(() => {
-      setSubmitting(false);
+    setSubmitFailed(false);
+
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${TARGET_EMAIL}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          _subject: "Nouvelle candidature — Universal Physics Club",
+          _template: "table",
+          _replyto: values.email,
+          "Nom et prénom": values.fullName,
+          "Date de naissance": values.birthDate,
+          "Numéro de téléphone": values.phone,
+          "E-mail": values.email,
+          "Pourquoi rejoindre le club": values.motivation,
+          "Objectifs et nouveautés souhaitées": values.goals,
+        }),
+      });
+      if (!res.ok) throw new Error("submission failed");
       setSubmitted(true);
-    }, 1100);
+    } catch {
+      setSubmitFailed(true);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -158,7 +179,7 @@ export default function RegisterForm() {
           <h2 className="font-display text-4xl font-medium tracking-tight sm:text-5xl">
             REJOINDRE LE CLUB
           </h2>
-          <p className="mono-label mt-4 text-[11px] text-fog sm:text-sm">
+          <p className="mt-4 text-sm text-white/70 sm:text-base">
             Quelques informations pour mieux te connaître.
           </p>
         </motion.div>
@@ -228,30 +249,7 @@ export default function RegisterForm() {
           </FieldShell>
 
           <FieldShell
-            label="Quel groupe souhaitez-vous rejoindre ? *"
-            error={errors.group}
-          >
-            <div className="flex flex-wrap gap-3">
-              {GROUPS.map((g) => (
-                <button
-                  type="button"
-                  key={g}
-                  data-cursor="link"
-                  onClick={() => set("group", g)}
-                  className={`mono-label rounded-full border px-4 py-2 text-[10px] transition-colors duration-300 ${
-                    values.group === g
-                      ? "border-[var(--color-electric)] bg-[var(--color-electric)]/10 text-white"
-                      : "border-line text-fog hover:border-line-strong hover:text-white"
-                  }`}
-                >
-                  {g}
-                </button>
-              ))}
-            </div>
-          </FieldShell>
-
-          <FieldShell
-            label="Pourquoi souhaitez-vous rejoindre ce groupe ? *"
+            label="Pourquoi souhaitez-vous rejoindre le club ? *"
             error={errors.motivation}
           >
             <div className="relative">
@@ -279,6 +277,19 @@ export default function RegisterForm() {
               <FocusGlow active={focusCounter.goals ?? 0} />
             </div>
           </FieldShell>
+
+          <AnimatePresence>
+            {submitFailed && (
+              <motion.p
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="text-center text-xs text-[var(--color-violet)]"
+              >
+                Une erreur est survenue. Merci de réessayer.
+              </motion.p>
+            )}
+          </AnimatePresence>
 
           <button
             type="submit"
