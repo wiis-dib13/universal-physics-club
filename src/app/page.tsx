@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import LoadingScreen from "@/components/LoadingScreen";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -14,21 +14,31 @@ import RegisterForm from "@/components/RegisterForm";
 
 const SESSION_KEY = "up-loaded";
 
-export default function Home() {
-  const [loading, setLoading] = useState(true);
+function subscribeAlreadySeen() {
+  return () => {};
+}
+function getAlreadySeenSnapshot() {
+  try {
+    return sessionStorage.getItem(SESSION_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+function getAlreadySeenServerSnapshot() {
+  return false;
+}
 
-  useEffect(() => {
-    try {
-      if (sessionStorage.getItem(SESSION_KEY)) {
-        setLoading(false);
-      }
-    } catch {
-      /* sessionStorage unavailable */
-    }
-  }, []);
+export default function Home() {
+  const alreadySeen = useSyncExternalStore(
+    subscribeAlreadySeen,
+    getAlreadySeenSnapshot,
+    getAlreadySeenServerSnapshot
+  );
+  const [dismissed, setDismissed] = useState(false);
+  const loading = !alreadySeen && !dismissed;
 
   const finishLoading = () => {
-    setLoading(false);
+    setDismissed(true);
     try {
       sessionStorage.setItem(SESSION_KEY, "1");
     } catch {

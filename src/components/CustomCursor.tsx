@@ -1,19 +1,32 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+
+const FINE_POINTER_QUERY = "(hover: hover) and (pointer: fine)";
+
+function subscribeFinePointer(callback: () => void) {
+  const mql = window.matchMedia(FINE_POINTER_QUERY);
+  mql.addEventListener("change", callback);
+  return () => mql.removeEventListener("change", callback);
+}
+
+const getFinePointerSnapshot = () => window.matchMedia(FINE_POINTER_QUERY).matches;
+const getFinePointerServerSnapshot = () => false;
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
-  const [enabled, setEnabled] = useState(false);
+  const enabled = useSyncExternalStore(
+    subscribeFinePointer,
+    getFinePointerSnapshot,
+    getFinePointerServerSnapshot
+  );
   const [variant, setVariant] = useState<"default" | "link" | "media">(
     "default"
   );
 
   useEffect(() => {
-    const isFine = window.matchMedia("(hover: hover) and (pointer: fine)");
-    if (!isFine.matches) return;
-    setEnabled(true);
+    if (!enabled) return;
     document.documentElement.classList.add("cursor-ready");
 
     let ringX = window.innerWidth / 2;
@@ -52,7 +65,7 @@ export default function CustomCursor() {
       cancelAnimationFrame(raf);
       document.documentElement.classList.remove("cursor-ready");
     };
-  }, []);
+  }, [enabled]);
 
   if (!enabled) return null;
 
