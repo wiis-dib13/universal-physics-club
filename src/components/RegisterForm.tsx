@@ -141,24 +141,10 @@ export default function RegisterForm() {
     setSubmitFailed(false);
 
     try {
-      const res = await fetch(`https://formsubmit.co/ajax/${TARGET_EMAIL}`, {
+      const res = await fetch("/api/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          _subject: "Nouvelle candidature — Universal Physics Club",
-          _template: "table",
-          _replyto: values.email,
-          "Nom et prénom": values.fullName,
-          "Date de naissance": values.birthDate,
-          "Numéro de téléphone": values.phone,
-          "E-mail": values.email,
-          "Groupe souhaité": values.group,
-          "Pourquoi rejoindre ce groupe": values.motivation,
-          "Objectifs et nouveautés souhaitées": values.goals,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
       });
       if (!res.ok) throw new Error("submission failed");
       setSubmitted(true);
