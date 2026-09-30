@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-void: #020204;
-  --color-ink: #06070c;
-  --color-panel: #0a0c14;
+  --color-void: #0b1530;
+  --color-ink: #0f1c3d;
+  --color-panel: #15254d;
   --color-white: #f6f7fb;
   --color-fog: #8b92a5;
   --color-fog-dim: #565c6c;
@@ -78,7 +78,7 @@ body {
   background: radial-gradient(
     ellipse at center,
     transparent 45%,
-    rgba(0, 0, 0, 0.55) 100%
+    rgba(5, 10, 30, 0.35) 100%
   );
 }
 
