@@ -1,5 +1,3 @@
-import nodemailer from "nodemailer";
-
 export const runtime = "nodejs";
 
 const FIELDS: [string, string][] = [
@@ -13,8 +11,8 @@ const FIELDS: [string, string][] = [
 ];
 
 export async function POST(request: Request) {
-  const { SMTP_USER, SMTP_PASS, MAIL_TO } = process.env;
-  if (!SMTP_USER || !SMTP_PASS) {
+  const accessKey = process.env.WEB3FORMS_KEY;
+  if (!accessKey) {
     return Response.json({ error: "mail not configured" }, { status: 500 });
   }
 
@@ -30,22 +28,28 @@ export async function POST(request: Request) {
     return Response.json({ error: "missing fields" }, { status: 400 });
   }
 
-  const text = FIELDS.map(([k, label]) => `${label} :\n${get(k)}`).join("\n\n");
+  const payload: Record<string, string> = {
+    access_key: accessKey,
+    subject: "Nouvelle candidature — Universal Physics Club",
+    from_name: "Universal Physics Club",
+    replyto: get("email"),
+  };
+  for (const [k, label] of FIELDS) payload[label] = get(k);
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: { user: SMTP_USER, pass: SMTP_PASS },
+    const res = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(payload),
     });
-    await transporter.sendMail({
-      from: `Universal Physics Club <${SMTP_USER}>`,
-      to: MAIL_TO || SMTP_USER,
-      replyTo: get("email"),
-      subject: "Nouvelle candidature — Universal Physics Club",
-      text,
-    });
+    const result = await res.json().catch(() => null);
+    if (!res.ok || !result?.success) {
+      console.error("register: web3forms failed", res.status, result);
+      return Response.json({ error: "send failed" }, { status: 502 });
+    }
     return Response.json({ ok: true });
-  } catch {
+  } catch (err) {
+    console.error("register: web3forms unreachable", err);
     return Response.json({ error: "send failed" }, { status: 502 });
   }
 }

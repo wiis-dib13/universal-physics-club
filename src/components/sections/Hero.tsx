@@ -46,6 +46,22 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_0%,var(--color-void)_78%)]" />
 
       <div className="relative z-10 flex flex-col items-center px-6 text-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.9 }}
+          className="relative mb-7 h-28 w-28 overflow-hidden rounded-full shadow-[0_0_40px_rgba(56,189,248,0.35)] sm:h-36 sm:w-36"
+        >
+          <Image
+            src="/logo.png"
+            alt="Logo Universal Physics — Tlemcen University Club"
+            fill
+            sizes="144px"
+            priority
+            className="scale-110 object-cover"
+          />
+        </motion.div>
+
         <motion.span
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
