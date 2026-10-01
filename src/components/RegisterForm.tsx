@@ -21,6 +21,7 @@ const GROUPS = ["Organisation", "Marketing", "Relation interne"];
 
 const REQUIRED_MSG = "Ce champ est requis.";
 const TARGET_EMAIL = "chaimaadali74@gmail.com";
+const WEB3FORMS_ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "";
 
 function FocusGlow({ active }: { active: number }) {
   return (
@@ -141,12 +142,28 @@ export default function RegisterForm() {
     setSubmitFailed(false);
 
     try {
-      const res = await fetch("/api/register", {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: "Nouvelle candidature — Universal Physics Club",
+          from_name: "Universal Physics Club",
+          replyto: values.email,
+          "Nom et prénom": values.fullName,
+          "Date de naissance": values.birthDate,
+          "Numéro de téléphone": values.phone,
+          "E-mail": values.email,
+          "Groupe souhaité": values.group,
+          "Pourquoi rejoindre ce groupe": values.motivation,
+          "Objectifs et nouveautés souhaitées": values.goals,
+        }),
       });
-      if (!res.ok) throw new Error("submission failed");
+      const result = await res.json().catch(() => null);
+      if (!res.ok || !result?.success) throw new Error("submission failed");
       setSubmitted(true);
     } catch {
       setSubmitFailed(true);
